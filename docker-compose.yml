@@ -1,0 +1,75 @@
+version: '3'
+
+networks:
+  default:
+    name: elastic
+    external: true
+
+volumes:
+  elasticsearch-data:
+    driver_opts:
+      type: none 
+      device: /home/thomas/Exercises/kltn/elasticsearch/volumesData
+      o: bind
+
+services:
+  elasticsearch:
+    image: elastdocker/elasticsearch:${ELK_VERSION}
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    restart: unless-stopped
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    volumes:
+      # - /home/thomas/Exercises/kltn/elasticsearch/volumesData:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elastic.yml:/usr/share/elasticsearch/config/elastic.yml
+
+  kibana:
+    image: elastdocker/kibana:${ELK_VERSION}
+    build:
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION 
+    restart: unless-stopped
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    environment:
+      ELASTICSEARCH_HOST_PORT: http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+      # - elasticsearch.username= "elastic"
+      # - elasticsearch.password= "JEFOxYm9bnawcSgWmOQK"
+    ports:
+      - "5601:5601"
+
+  logstash:
+    image: elastdocker/logstash:${ELK_VERSION}
+    command: ["logstash", "--enable-local-plugin-development"]
+    restart: unless-stopped
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTICSEARCH_HOST_PORT: http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,rw
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro,rw
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,rw
+      - /home/thomas/Downloads/postgresql-42.5.2.jar:/usr/share/logstash/logstash-core/lib/jars/postgresql-42.5.2.jar
+    ports: 
+      - "5000:5000"
+
+

@@ -1,0 +1,28 @@
+cluster.name: ${ELASTIC_CLUSTER_NAME}
+node.name:    ${ELASTIC_NODE_NAME}
+network.host: 0.0.0.0
+transport.host: 0.0.0.0
+
+## Cluster Settings
+discovery.seed_hosts: ${ELASTIC_DISCOVERY_SEEDS}
+cluster.initial_master_nodes: ${ELASTIC_INIT_MASTER_NODE}
+action.auto_create_index: "true"
+
+
+bootstrap.memory_lock: "true"
+
+# Security
+xpack.security.enabled: false
+
+# ssl
+xpack.security.transport.ssl.enabled: false
+xpack.security.transport.ssl:
+  enabled: false
+xpack.security.enrollment.enabled: false
+
+# http
+xpack.security.http.ssl.enabled: false
+
+
+# Monitoring
+xpack.monitoring.collection.enabled: true
