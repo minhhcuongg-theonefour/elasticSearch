@@ -9,6 +9,7 @@ volumes:
   elasticsearch-data:
     driver_opts:
       type: none 
+      # replace a folder in your machine
       device: /home/thomas/Exercises/kltn/elasticsearch/volumesData
       o: bind
 
@@ -21,10 +22,10 @@ services:
         ELK_VERSION: ${ELK_VERSION}
     restart: unless-stopped
     environment:
-      - node.name=es01
+      - node.name=nmc01
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01
-      - cluster.initial_master_nodes=es01
+      - discovery.seed_hosts=nmc01
+      - cluster.initial_master_nodes=nmc01
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
     ulimits:
@@ -34,7 +35,6 @@ services:
     ports:
       - 9200:9200
     volumes:
-      # - /home/thomas/Exercises/kltn/elasticsearch/volumesData:/usr/share/elasticsearch/data
       - ./elasticsearch/config/elastic.yml:/usr/share/elasticsearch/config/elastic.yml
 
   kibana:
@@ -48,8 +48,6 @@ services:
       - ./kibana/config/:/usr/share/kibana/config:ro
     environment:
       ELASTICSEARCH_HOST_PORT: http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
-      # - elasticsearch.username= "elastic"
-      # - elasticsearch.password= "JEFOxYm9bnawcSgWmOQK"
     ports:
       - "5601:5601"
 
@@ -68,6 +66,7 @@ services:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,rw
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro,rw
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,rw
+      # Download jdbc postgresql-42.5.2.jar and ref your address file in here
       - /home/thomas/Downloads/postgresql-42.5.2.jar:/usr/share/logstash/logstash-core/lib/jars/postgresql-42.5.2.jar
     ports: 
       - "5000:5000"
