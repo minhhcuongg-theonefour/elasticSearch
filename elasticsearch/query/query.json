@@ -1,0 +1,62 @@
+{
+    "_source": [
+        "id",
+        "name",
+        "image",
+        "author",
+        "price",
+        "rating",
+        "genres_id"
+    ],
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "term": {
+                        "genres_id": 2
+                    }
+                },
+                {
+                    "range": {
+                        "price": {
+                            "gte": 10,
+                            "lt": 500
+                        }
+                    }
+                },
+                {
+                    "range": {
+                        "rating": {
+                            "lte": 5
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "sort": [
+        {
+            "name.keyword": {
+                "order": "asc"
+            },
+            "rating": {
+                "order": "desc"
+            },
+            "price": {
+                "order": "asc"
+            }
+        }
+    ],
+    "collapse": {
+        "field": "id"
+    },
+    "aggs": {
+        "unique_books": {
+            "cardinality": {
+                "field": "id"
+            }
+        }
+    },
+    "from": 0,
+    "size": 10
+}
