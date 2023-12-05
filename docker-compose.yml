@@ -2,7 +2,7 @@ version: '3'
 
 networks:
   default:
-    name: nmc_bookstore
+    name: elastic
     external: true
 
 volumes:
