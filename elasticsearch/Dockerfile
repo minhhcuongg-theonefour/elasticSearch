@@ -4,5 +4,3 @@ ARG ELK_VERSION
 FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
 
 EXPOSE ${ELASTICSEARCH_PORT}
-
-CMD ['sysctl', '-w', 'vm.max_map_count=262144']
