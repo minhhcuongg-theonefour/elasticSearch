@@ -23,9 +23,8 @@ services:
     restart: unless-stopped
     environment:
       - node.name=nmc01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=nmc01
-      - cluster.initial_master_nodes=nmc01
+      - cluster.name=single-node-cluster
+      - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
     ulimits:
