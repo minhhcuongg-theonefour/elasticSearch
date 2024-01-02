@@ -1,0 +1,9 @@
+---
+http.host: "0.0.0.0"
+
+## X-Pack security credentials
+xpack.monitoring.elasticsearch.hosts: ["https://nmcbookstore.es.asia-southeast1.gcp.elastic-cloud.com:9243/"]
+xpack.monitoring.elasticsearch.username: "elastic"
+xpack.monitoring.elasticsearch.password: "LVGApxEM3OsQQcwwTRoCIyPL" 
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.ssl.verification_mode: certificate
